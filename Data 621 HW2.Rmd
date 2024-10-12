@@ -1,0 +1,103 @@
+---
+title: "Data 621 HW2"
+author: "Angel Gallardo"
+date: "2024-10-12"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+```
+#1
+```{r}
+data <- read.csv("https://raw.githubusercontent.com/Angelogallardo05/DAta-621-HW2/refs/heads/main/classification-output-data.csv")
+glimpse(data)
+```
+
+#2
+```{r}
+confusion_matrix <- table(Actual = data$class, Predicted = data$scored.class)
+print(confusion_matrix)
+
+```
+
+#3
+```{r}
+
+calculate_accuracy <- function(data) {
+
+  confusion_matrix <- table(Actual = data$class, Predicted = data$scored.class)
+  
+
+  TN <- confusion_matrix[1, 1]  # True Negatives
+  TP <- confusion_matrix[2, 2]  # True Positives
+  FP <- confusion_matrix[1, 2]  # False Positives
+  FN <- confusion_matrix[2, 1]  # False Negatives
+  
+  # Calculate accuracy
+  accuracy <- (TP + TN) / (TP + TN + FP + FN)
+  
+  return(accuracy)
+}
+```
+
+```{r}
+accuracy <- calculate_accuracy(data)
+print(accuracy)
+```
+
+#4 
+```{r}
+
+calculate_error_rate <- function(data) {
+ 
+  confusion_matrix <- table(Actual = data$class, Predicted = data$scored.class)
+  
+  TN <- confusion_matrix[1, 1]  # True Negatives
+  TP <- confusion_matrix[2, 2]  # True Positives
+  FP <- confusion_matrix[1, 2]  # False Positives
+  FN <- confusion_matrix[2, 1]  # False Negatives
+  
+
+  error_rate <- (FP + FN) / (TP + FP + TN + FN)
+  
+  return(error_rate)
+}
+
+
+calculate_metrics <- function(data) {
+  
+  confusion_matrix <- table(Actual = data$class, Predicted = data$scored.class)
+  
+  TN <- confusion_matrix[1, 1]  # True Negatives
+  TP <- confusion_matrix[2, 2]  # True Positives
+  FP <- confusion_matrix[1, 2]  # False Positives
+  FN <- confusion_matrix[2, 1]  # False Negatives
+  
+  accuracy <- (TP + TN) / (TP + TN + FP + FN)
+  
+  error_rate <- (FP + FN) / (TP + FP + TN + FN)
+  
+  return(list(accuracy = accuracy, error_rate = error_rate))
+}
+
+```
+
+
+
+```{r}
+metrics <- calculate_metrics(data)
+print(metrics$accuracy)
+print(metrics$error_rate)
+
+
+# Verify the sum
+if (metrics$accuracy + metrics$error_rate == 1) {
+  print("Accuracy and error rate sum to 1.")
+} else {
+  print("There is an error in the calculations.")
+}
+```
+ 
